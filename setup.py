@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='gapi-updated',
+    name='gapiupdated',
     version='1.0.0',
     author='Scott Hendrickson, Josh Montague, Jeff Kolb, Nikhil Sulegaon',
     author_email='nikhilsulegaon@gmail.com',
@@ -12,7 +12,7 @@ setup(
     license='LICENSE.txt',
     description='Simple utilties to explore the Gnip search API',
     install_requires=[
-        "gnacs-updated",
+        "gnacsupdated",
         "sngrams >= 0.2.0",
         "requests > 2.4.0"
     ],
