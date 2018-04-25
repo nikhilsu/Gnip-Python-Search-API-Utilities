@@ -64,7 +64,7 @@ optional arguments:
                         is automatically set based on endpoint.]
 </pre>
 
-##Using a configuration file
+## Using a configuration file
 
 To avoid entering the the -u, -p and -l options for every command, create a configuration file named ".gnip" 
 in the directory where you will run the code. When this file contains the correct parameters, you can omit
