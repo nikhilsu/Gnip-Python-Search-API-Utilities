@@ -137,7 +137,7 @@ class Query(object):
         # Don't use res.text as it creates encoding challenges!
         return (res.content.decode(res.encoding))
 
-    def parse_responses(self, count_bucket):
+    def parse_responses(self, count_bucket, batch_lambda=None):
         """Parse returned responses.
 
            When paged=True, manage paging using the API token mechanism
@@ -152,6 +152,8 @@ class Query(object):
             tmp_response = json.loads(doc)
             if "results" in tmp_response:
                 acs.extend(tmp_response["results"])
+                if batch_lambda is not None:
+                    batch_lambda(tmp_response["results"])
             else:
                 raise ValueError("Invalid request\nQuery: %s\nResponse: %s" % (self.rule_payload, doc))
             if self.hard_max is None or len(acs) < self.hard_max:
@@ -225,7 +227,8 @@ class Query(object):
         for rec in self.get_activity_set():
             yield self.twitter_parser.get_source_list(rec)
 
-    def execute(self, pt_filter, max_results=100, start=None, end=None, count_bucket=None, show_query=False):
+
+    def execute(self, pt_filter, max_results=100, start=None, end=None, count_bucket=None, show_query=False, batch_lambda=None):
         """Execute a query with filter, maximum results, start and end dates.
 
            Count_bucket determines the bucket size for the counts endpoint.
@@ -272,7 +275,7 @@ class Query(object):
         # search v2: newest date is more recent than 2006-03-01T00:00:00
         self.newest_t = datetime.datetime.strptime("2006-03-01T00:00:00.000z", TIME_FORMAT_LONG)
         #
-        for rec in self.parse_responses(count_bucket):
+        for rec in self.parse_responses(count_bucket, batch_lambda):
             # parse_responses returns only the last set of activities retrieved, not all paged results.
             # to access the entire set, use the helper functions get_activity_set and get_list_set!
             self.res_cnt += 1
